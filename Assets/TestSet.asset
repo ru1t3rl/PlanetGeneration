@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: eec4184a4c327414b8f4fa8f7b57cf2c, type: 3}
   m_Name: TestSet
   m_EditorClassIdentifier: Assembly-CSharp:Ru1t3rl.Noises:NoiseSettings
-  Seed: test
+  Seed: 
   Size: {x: 128, y: 128}
-  Octaves: 2
-  Persistance: 0.501
-  Lacunarity: 1
-  NoiseScale: 1
+  Octaves: 5
+  Persistance: 0.268
+  Lacunarity: 2.9
+  NoiseScale: 25
   Offset: {x: 0, y: 0}

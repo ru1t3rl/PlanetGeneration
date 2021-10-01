@@ -11,6 +11,7 @@ namespace Ru1t3rl
         [Range(2, 256)]
         public int resolution = 10;
         [SerializeField] bool spherified = true;
+        [SerializeField] Material material;
 
         MeshFilter[] meshFilters;
         PlanetFace[] planetFaces;
@@ -40,13 +41,26 @@ namespace Ru1t3rl
 
             planetFaces = new PlanetFace[meshFilters.Length];
 
+            noiseTexture = PerlinNoise.GenerateNoiseTexture(
+                noiseSettings.Size.x, noiseSettings.Size.y,
+                noiseSettings.Seed.GetHashCode(),
+                noiseSettings.NoiseScale,
+                noiseSettings.Octaves,
+                noiseSettings.Persistance,
+                noiseSettings.Lacunarity,
+                noiseSettings.Offset
+            );
+
+            noiseTexture.Apply();
+            material.SetTexture("_MainTex", noiseTexture);
+
             for (int i = 0; i < 6; i++)
             {
                 if (meshFilters[i] == null)
                 {
                     GameObject face = new GameObject($"Face_{i + 1}");
                     face.transform.parent = transform;
-                    face.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
+                    face.AddComponent<MeshRenderer>().sharedMaterial = material;
                     meshFilters[i] = face.AddComponent<MeshFilter>();
                 }
 
@@ -57,16 +71,6 @@ namespace Ru1t3rl
                     spherified
                 );
             }
-
-            noiseTexture = Noise.GenerateNoiseTexture(
-                noiseSettings.Size.x, noiseSettings.Size.y,
-                noiseSettings.Seed.GetHashCode(),
-                noiseSettings.NoiseScale,
-                noiseSettings.Octaves,
-                noiseSettings.Persistance,
-                noiseSettings.Lacunarity,
-                noiseSettings.Offset
-            );
         }
 
     }
