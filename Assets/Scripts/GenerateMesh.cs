@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ru1t3rl.Planets;
+using Ru1t3rl.Noises;
 
 namespace Ru1t3rl
 {
@@ -17,6 +18,10 @@ namespace Ru1t3rl
         Vector3[] directions = { Vector3.up, Vector3.down,
                                  Vector3.left, Vector3.right,
                                  Vector3.forward, Vector3.back};
+
+        [Header("Noise Settings")]
+        [SerializeField] NoiseSettings noiseSettings;
+        [SerializeField] Texture2D noiseTexture;
 
         public void Generate()
         {
@@ -52,6 +57,16 @@ namespace Ru1t3rl
                     spherified
                 );
             }
+
+            noiseTexture = Noise.GenerateNoiseTexture(
+                noiseSettings.Size.x, noiseSettings.Size.y,
+                noiseSettings.Seed.GetHashCode(),
+                noiseSettings.NoiseScale,
+                noiseSettings.Octaves,
+                noiseSettings.Persistance,
+                noiseSettings.Lacunarity,
+                noiseSettings.Offset
+            );
         }
 
     }
