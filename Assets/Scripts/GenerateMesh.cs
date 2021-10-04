@@ -21,8 +21,8 @@ namespace Ru1t3rl
                                  Vector3.forward, Vector3.back};
 
         [Header("Noise Settings")]
-        [SerializeField] NoiseSettings noiseSettings;
         [SerializeField] Texture2D noiseTexture;
+        [SerializeField] NoiseFilter noiseFilter;
 
         public void Generate()
         {
@@ -41,18 +41,8 @@ namespace Ru1t3rl
 
             planetFaces = new PlanetFace[meshFilters.Length];
 
-            noiseTexture = PerlinNoise.GenerateNoiseTexture(
-                noiseSettings.Size.x, noiseSettings.Size.y,
-                noiseSettings.Seed.GetHashCode(),
-                noiseSettings.NoiseScale,
-                noiseSettings.Octaves,
-                noiseSettings.Persistance,
-                noiseSettings.Lacunarity,
-                noiseSettings.Offset
-            );
-
-            noiseTexture.Apply();
-            material.SetTexture("_MainTex", noiseTexture);
+            noiseFilter.CombineLayers();
+            material.SetTexture("_MainTex", noiseFilter.noiseTexture);
 
             for (int i = 0; i < 6; i++)
             {
@@ -72,6 +62,5 @@ namespace Ru1t3rl
                 );
             }
         }
-
     }
 }

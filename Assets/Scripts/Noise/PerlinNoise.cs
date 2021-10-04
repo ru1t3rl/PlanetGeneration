@@ -156,9 +156,12 @@ namespace Ru1t3rl.Noises
             return noiseMap.Select(x => Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, x)).ToArray();
         }
 
-        public static Texture2D GenerateNoiseTexture(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset)
+        public static Texture2D GenerateNoiseTexture(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, int stitchWidth)
         {
             float[] noiseMap = GenerateNoiseMap(mapWidth, mapHeight, seed, scale, octaves, persistance, lacunarity, offset);
+            MakeSeamlessHorizontally(noiseMap, mapWidth, mapHeight, stitchWidth);
+            MakeSeamlessVertically(noiseMap, mapWidth, mapHeight, stitchWidth);
+
 
             Texture2D tex = new Texture2D(mapWidth, mapHeight);
             for (int i = 0; i < noiseMap.Length; i++)
@@ -173,10 +176,10 @@ namespace Ru1t3rl.Noises
             return tex;
         }
 
-        public static void MakeSeamlessHorizontally(float[] noiseMap, int stitchWidth)
+        public static void MakeSeamlessHorizontally(float[] noiseMap, int mapWidth, int mapHeight, int stitchWidth)
         {
-            int width = noiseMap.GetUpperBound(0) + 1;
-            int height = noiseMap.GetUpperBound(1) + 1;
+            int width = mapWidth;
+            int height = mapHeight;
 
             // iterate on the stitch band (on the left
             // of the noise)
@@ -197,10 +200,10 @@ namespace Ru1t3rl.Noises
             }
         }
 
-        public static void MakeSeamlessVertically(float[] noiseMap, int stitchWidth)
+        public static void MakeSeamlessVertically(float[] noiseMap, int mapWidth, int mapHeight, int stitchWidth)
         {
-            int width = noiseMap.GetUpperBound(0) + 1;
-            int height = noiseMap.GetUpperBound(1) + 1;
+            int width = mapWidth;
+            int height = mapHeight;
 
             // iterate through the stitch band (both
             // top and bottom sides are treated

@@ -18,6 +18,7 @@ namespace Ru1t3rl.Noises
         public float Persistance;
         public float Lacunarity;
         public float NoiseScale;
+        public int StitchWidth;
         public Vector2 Offset;
     }
 }
