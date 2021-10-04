@@ -69,6 +69,11 @@ namespace Ru1t3rl
         public void ApplyNoise()
         {
             material.SetTexture("_MainTex", noiseTexture);
+
+            for (int iFace = 0; iFace < 6; iFace++)
+            {
+                int vertices = meshFilters[0].mesh.vertices.Length * 6;
+            }
         }
     }
 }
