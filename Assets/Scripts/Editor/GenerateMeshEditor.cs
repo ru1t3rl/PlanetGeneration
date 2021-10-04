@@ -13,13 +13,24 @@ namespace Ru1t3rl
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
+
             if (gm == null)
                 gm = (GenerateMesh)target;
 
-            if (GUILayout.Button("Generate"))
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Combine Noise"))
             {
-                gm.Generate();
+                gm.CombineNoise();
+            }
+            if (GUILayout.Button("Apply Noise"))
+            {
+                gm.ApplyNoise();
+            }
+            GUILayout.EndHorizontal();
+
+            if (GUILayout.Button("Generate Mesh"))
+            {
+                gm.GenerateMeshes();
             }
         }
     }

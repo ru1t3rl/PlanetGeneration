@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eec4184a4c327414b8f4fa8f7b57cf2c, type: 3}
-  m_Name: TestSet
+  m_Name: TestSet 2
   m_EditorClassIdentifier: Assembly-CSharp:Ru1t3rl.Noises:NoiseSettings
   Seed: 
   Size: {x: 256, y: 256}
-  Octaves: 0
-  Persistance: 1
-  Lacunarity: 0
+  Octaves: 5
+  Persistance: 0.15
+  Lacunarity: 5
   NoiseScale: 50
   StitchWidth: 16
   Offset: {x: 0, y: 0}

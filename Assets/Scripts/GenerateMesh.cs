@@ -24,7 +24,7 @@ namespace Ru1t3rl
         [SerializeField] Texture2D noiseTexture;
         [SerializeField] NoiseFilter noiseFilter;
 
-        public void Generate()
+        public void GenerateMeshes()
         {
             Vectori test = new Vectori(10, 20, 1);
             Vectori test2 = new Vectori(5, 10, 60);
@@ -40,9 +40,6 @@ namespace Ru1t3rl
             }
 
             planetFaces = new PlanetFace[meshFilters.Length];
-
-            noiseFilter.CombineLayers();
-            material.SetTexture("_MainTex", noiseFilter.noiseTexture);
 
             for (int i = 0; i < 6; i++)
             {
@@ -61,6 +58,17 @@ namespace Ru1t3rl
                     spherified
                 );
             }
+        }
+
+        public void CombineNoise()
+        {
+            noiseFilter.CombineLayers();
+            noiseTexture = noiseFilter.noiseTexture;
+        }
+
+        public void ApplyNoise()
+        {
+            material.SetTexture("_MainTex", noiseTexture);
         }
     }
 }

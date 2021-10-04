@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Random = System.Random;
 
 namespace Ru1t3rl.Noises
 {
@@ -16,7 +17,7 @@ namespace Ru1t3rl.Noises
         {
             noiseTexture = PerlinNoise.GenerateNoiseTexture(
                 noiseSettings.Size.x, noiseSettings.Size.y,
-                noiseSettings.Seed.GetHashCode(),
+                System.String.IsNullOrEmpty(noiseSettings.Seed) ? RandomSeed().GetHashCode() : noiseSettings.Seed.GetHashCode(),
                 noiseSettings.NoiseScale,
                 noiseSettings.Octaves,
                 noiseSettings.Persistance,
@@ -24,6 +25,23 @@ namespace Ru1t3rl.Noises
                 noiseSettings.Offset,
                 noiseSettings.StitchWidth
             );
+
+            noiseTexture.Apply();
+        }
+
+        string RandomSeed(int length = 12)
+        {
+            Random r = new Random();
+            string seed = string.Empty;
+            for (int i = 0; i < length; i++)
+            {
+                seed += System.Convert.ToChar(r.Next(33, 125));
+                r = new Random(seed.GetHashCode());
+            }
+
+            Debug.Log($"<b>[Noise Layer]</b> Used random seed: {seed}");
+
+            return seed;
         }
     }
 
@@ -42,8 +60,7 @@ namespace Ru1t3rl.Noises
 
             if (GUILayout.Button("Generate Noise"))
             {
-                if (layer != null)
-                    layer.GenerateNoise();
+                layer.GenerateNoise();
             }
         }
     }

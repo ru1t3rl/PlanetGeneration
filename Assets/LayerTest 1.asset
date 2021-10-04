@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2243769a4288aee47be0aca1700feaf5, type: 3}
-  m_Name: LayerTest
+  m_Name: LayerTest 1
   m_EditorClassIdentifier: 
-  noiseSettings: {fileID: 11400000, guid: ab4ce3e460a9e7648b4f70e8d643234c, type: 2}
-  blendMode: 2
+  noiseSettings: {fileID: 11400000, guid: a4ef77c53a52ba4499822bdc9b4fd2af, type: 2}
+  blendMode: 0
   noiseTexture: {fileID: 0}
