@@ -8,6 +8,7 @@ namespace Ru1t3rl.Noises
     public class NoiseFilter
     {
         public Vector2Int size;
+        public float minHeight, maxHeight;
         public NoiseLayer[] noiseLayers;
         public Texture2D noiseTexture { get; private set; }
 
@@ -29,17 +30,17 @@ namespace Ru1t3rl.Noises
                 }
             }
 
-            ReMap(0, 1);
+            ReMap(minHeight, maxHeight);
         }
 
-        void ReMap(int min, int max)
+        void ReMap(float min, float max)
         {
             float color;
             for (int y = 0, x; y < size.y; y++)
             {
                 for (x = 0; x < size.x; x++)
                 {
-                    color = Mathf.InverseLerp(min, max, noiseTexture.GetPixel(y, x).r);
+                    color = min + (max - min) * (noiseTexture.GetPixel(y, x).r / noiseLayers.Length);
                     noiseTexture.SetPixel(y, x, new Color(color, color, color));
                 }
             }
