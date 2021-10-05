@@ -1,24 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using Random = System.Random;
 
 namespace Ru1t3rl.Noises
 {
-    [CreateAssetMenu(fileName = "Noise Generation", menuName = "Noise/Perlin")]
-    public class NoiseSettings : ScriptableObject
+    [System.Serializable]
+    public class NoiseSettings
     {
-        [Header("Noise settings")]
-        public string Seed;
-        public Vector2Int Size;
-        // The more octaves, the longer generation will take
-        public int Octaves;
-        [Range(0, 1)]
-        public float Persistance;
-        public float Lacunarity;
-        public float NoiseScale;
-        public int StitchWidth;
-        public Vector2 Offset;
+        public string seed = string.Empty;
+        public float strength = 1;
+        [Range(1, 8)]
+        public int numLayers = 1;
+        public float baseRoughness = 1;
+        public float roughness = 2;
+        public float persistence = .5f;
+        public Vector3 centre;
+        public float minValue = .1f;
     }
 }

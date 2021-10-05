@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43468e46924b0c488f1cf1750a7a137, type: 3}
+  m_Name: RandomValueTest
+  m_EditorClassIdentifier: 
+  radius: 1
+  noiseLayers:
+  - name: Base Continents
+    enabled: 1
+    blendMode: 0
+    settings:
+      seed: default
+      strength: 0.6
+      numLayers: 1
+      baseRoughness: 0.7
+      roughness: 1
+      persistence: 0.01
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 0.1
+  - name: Mountains - Detail 1
+    enabled: 1
+    blendMode: 0
+    settings:
+      seed: 
+      strength: 0.75
+      numLayers: 8
+      baseRoughness: 1
+      roughness: 2
+      persistence: 0.7
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 0
+  - name: LowLands - Flatten
+    enabled: 1
+    blendMode: 0
+    settings:
+      seed: default
+      strength: 1
+      numLayers: 1
+      baseRoughness: 0.7
+      roughness: 1
+      persistence: 0.5
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 0
+  - name: Planet Shape
+    enabled: 1
+    blendMode: 1
+    settings:
+      seed: default
+      strength: 0.2
+      numLayers: 1
+      baseRoughness: 0.5
+      roughness: 1
+      persistence: 0.15
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 0

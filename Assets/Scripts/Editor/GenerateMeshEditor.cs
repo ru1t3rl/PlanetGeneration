@@ -5,32 +5,32 @@ using UnityEditor;
 
 namespace Ru1t3rl
 {
-    [CustomEditor(typeof(GenerateMesh))]
-    public class GenerateMeshEditor : Editor
+    [CustomEditor(typeof(PlanetGenerator))]
+    public class GeneratePlanetEditor : Editor
     {
-        GenerateMesh gm;
+        PlanetGenerator gm;
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
             if (gm == null)
-                gm = (GenerateMesh)target;
+                gm = (PlanetGenerator)target;
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Combine Noise"))
+            if (GUILayout.Button("Save Gradient"))
             {
-                gm.CombineNoise();
+                gm.SaveGradientTexture();
             }
-            if (GUILayout.Button("Apply Noise"))
+            if (GUILayout.Button("Apply Gradient"))
             {
-                gm.ApplyNoise();
+                gm.ApplyGradientTexture();
             }
             GUILayout.EndHorizontal();
 
             if (GUILayout.Button("Generate Mesh"))
             {
-                gm.GenerateMeshes();
+                gm.GenerateMesh();
             }
         }
     }

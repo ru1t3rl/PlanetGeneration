@@ -1,88 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
+using System.Text.RegularExpressions;
 
 namespace Ru1t3rl.Noises
 {
-    [System.Serializable]
     public class NoiseFilter
     {
-        public Vector2Int size;
-        public float minHeight, maxHeight;
-        public NoiseLayer[] noiseLayers;
-        public Texture2D noiseTexture { get; private set; }
+        NoiseSettings settings;
+        Noise noise;
 
-        public void CombineLayers()
+        const string ALPHANUMERIC = "123abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW";
+
+        public NoiseFilter(NoiseSettings settings)
         {
-            if (noiseLayers.Length <= 0)
-                return;
-
-            noiseTexture = new Texture2D(size.x, size.y);
-
-            SetPixels(noiseLayers[0].noiseTexture, noiseLayers[0].blendMode);
-            noiseTexture.Apply();
-
-            for (int iLayer = 1; iLayer < noiseLayers.Length; iLayer++)
-            {
-                if (noiseLayers[iLayer].noiseTexture != null)
-                {
-                    SetPixels(noiseLayers[iLayer].noiseTexture, noiseLayers[iLayer].blendMode);
-                }
-            }
-
-            ReMap(minHeight, maxHeight);
+            this.settings = settings;
+            noise = new Noise(System.String.IsNullOrEmpty(settings.seed) ? GenerateRandomSeed() : settings.seed.GetHashCode());
         }
 
-        void ReMap(float min, float max)
+        public int GenerateRandomSeed(int length = 12)
         {
-            float color;
-            for (int y = 0, x; y < size.y; y++)
+            Random rnd;
+
+            string seed = string.Empty;
+            for (int i = 0; i < length; i++)
             {
-                for (x = 0; x < size.x; x++)
-                {
-                    color = min + (max - min) * (noiseTexture.GetPixel(y, x).r / noiseLayers.Length);
-                    noiseTexture.SetPixel(y, x, new Color(color, color, color));
-                }
+                rnd = new Random(seed.GetHashCode());
+                seed += ALPHANUMERIC[rnd.Next(0, ALPHANUMERIC.Length)];
             }
-            noiseTexture.Apply();
+
+            return seed.GetHashCode();
         }
 
-        void SetPixels(Texture2D inputTexture, BlendMode blendMode)
+        public float Evaluate(Vector3 point)
         {
-            for (int y = 0, x; y < size.y; y++)
+            float noiseValue = 0;
+            float frequency = settings.baseRoughness;
+            float amplitude = 1;
+
+            for (int i = 0; i < settings.numLayers; i++)
             {
-                for (x = 0; x < size.x; x++)
-                {
-                    try
-                    {
-                        switch (blendMode)
-                        {
-                            case BlendMode.Multiply:
-                                noiseTexture.SetPixel(x, y, noiseTexture.GetPixel(x, y) * inputTexture.GetPixel(x, y));
-                                break;
-                            case BlendMode.Additive:
-                                noiseTexture.SetPixel(x, y, noiseTexture.GetPixel(x, y) + inputTexture.GetPixel(x, y));
-                                break;
-                            case BlendMode.Substract:
-                                noiseTexture.SetPixel(x, y, noiseTexture.GetPixel(x, y) - inputTexture.GetPixel(x, y));
-                                break;
-                        }
-                    }
-                    catch (System.NullReferenceException)
-                    {
-                        try
-                        {
-                            noiseTexture.SetPixel(x, y, inputTexture.GetPixel(x, y));
-                        }
-                        catch (System.NullReferenceException)
-                        {
-                            noiseTexture.SetPixel(x, y, Color.black);
-                        }
-                    }
-                }
+                float v = noise.Evaluate(point * frequency + settings.centre);
+                noiseValue += (v + 1) * .5f * amplitude;
+                frequency *= settings.roughness;
+                amplitude *= settings.persistence;
             }
 
-            noiseTexture.Apply();
+            //noiseValue = Mathf.Max(0, noiseValue - settings.minValue);
+            return noiseValue * settings.strength;
         }
     }
 }
