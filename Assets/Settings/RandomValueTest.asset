@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43468e46924b0c488f1cf1750a7a137, type: 3}
   m_Name: RandomValueTest
   m_EditorClassIdentifier: 
-  radius: 1
+  radius: 2
   noiseLayers:
   - name: Base Continents
     enabled: 1

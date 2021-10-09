@@ -2,13 +2,20 @@ Shader "Custom/PlanetShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Main Texture", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _Color ("Color", Color) = (1,1,1,1)     
         _Min ("Min", Float) = 0
         _Max ("Max", Float) = 1
-        _GradientTex("Gradient", 2D) = "white" {}
+        
+        _GradientAlbedo("Gradient Albedo", 2D) = "white" {}
+        
+        _GradientSmoothness("Smoothness Gradient", 2D) = "grey" {}         
+        _Glossiness ("Smoothness Intensity", Range(0,1)) = 0.5   
+
+        _GradientMetallic("Gradient Metallic", 2D) = "grey" {}
+        _Metallic ("Metallic Intensity", Range(0,1)) = 1
+
+
+        _BaseHeight("Base Height", Float) = 0
         _HeightOffset ("Height Offset", Float) = 0.2
     }
     SubShader
@@ -30,12 +37,12 @@ Shader "Custom/PlanetShader"
         };
 
         
-        sampler2D _MainTex, _GradientTex;
+        sampler2D _GradientAlbedo, _GradientSmoothness, _GradientMetallic;
         uniform float _Min = 0, _Max = 0;
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        float _HeightOffset;
+        float _HeightOffset, _BaseHeight;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -66,13 +73,18 @@ Shader "Custom/PlanetShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            _Max += _BaseHeight;
+
             float height = length(IN.localPos) / (_Max - _Min) + _HeightOffset;  
-            float4 color = tex2D(_GradientTex, float2(height, 0));
+            float4 color = tex2D(_GradientAlbedo, float2(height, 0));
+            float smoothness = tex2D(_GradientSmoothness, float2(height, 0)) * _Glossiness;
+            float metallic = tex2D(_GradientMetallic, float2(height, 0)).r * _Metallic;
+
             o.Albedo = color;// * height;
             o.Alpha = 1 - height;
             // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
+            o.Metallic = metallic;
+            o.Smoothness = smoothness;
         }
         ENDCG
     }

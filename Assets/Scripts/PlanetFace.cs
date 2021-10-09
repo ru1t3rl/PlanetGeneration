@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Linq;
+using System.Threading.Tasks;
 using Ru1t3rl.Noises;
-
 namespace Ru1t3rl.Planets
 {
     public class PlanetFace
@@ -58,6 +58,18 @@ namespace Ru1t3rl.Planets
             return mesh;
         }
 
+        public async Task<Mesh[]> Generate(int resolution, Vectori localUp, NoiseLayer[] noiseLayers, ShapeSettings shapeSettings, int nChunks, bool spherified = true, int iFace = 0)
+        {
+            this.localUp = localUp;
+            this.resolution = resolution;
+            this.noiseLayers = noiseLayers;
+            this.shapeSettings = shapeSettings;
+
+            Mesh[] mesh = new Mesh[nChunks * nChunks];
+
+            return mesh;
+        }
+
         public void Generate(ref Mesh mesh, int resolution, Vectori localUp, NoiseLayer noiseLayer, ShapeSettings shapeSettings, bool spherified = true, int iFace = 0)
         {
             this.resolution = resolution;
@@ -77,6 +89,58 @@ namespace Ru1t3rl.Planets
                 ConstructNormalizedMesh(ref mesh, iFace);
         }
 
+        /// <summary>
+        /// Generate a chucnk of the face
+        /// </summary>
+        /// <param name="iFace">The current face</param>
+        /// <param name="cChunk">The current chunk</param>
+        /// <param name="nChunks"> The number of chunks</param>
+        async Task<Mesh> GenerateMeshNormalizedAsync(int iFace, int cChunck, int nChunks)
+        {
+            Vectori[] vertices = new Vectori[resolution * resolution];
+            Vector2[] uvs = new Vector2[vertices.Length];
+            int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
+            int triIndex = 0;
+
+            for (int y = 0, i = 0; y < resolution; y++)
+            {
+                for (int x = 0; x < resolution; x++, i++)
+                {
+                    Vector2 percent = new Vector2(x, y) / (resolution - 1);
+                    Vectori pointOnUnitCube = (localUp + axisA * (percent.x - .5f) * 2 + axisB * (percent.y - .5f) * 2) / nChunks * cH;
+                    Vectori pointOnUnitSphere = pointOnUnitCube.normalized;
+                    vertices[i] = CalculatePointOnSphere(pointOnUnitSphere);
+
+                    if (x != resolution - 1 && y != resolution - 1)
+                    {
+                        triangles[triIndex] = i;
+                        triangles[triIndex + 1] = i + resolution + 1;
+                        triangles[triIndex + 2] = i + resolution;
+
+                        triangles[triIndex + 3] = i;
+                        triangles[triIndex + 4] = i + 1;
+                        triangles[triIndex + 5] = i + resolution + 1;
+                        triIndex += 6;
+                    }
+
+                    float offsetX = ((localUp.x + localUp.z) + 1) * (1 / 3);
+                    float offsetY = localUp.y / 2;
+
+                    uvs[i] = new Vector2(
+                        (x / resolution) / 3f + offsetX,
+                        (y / resolution) / 2f + offsetY
+                    );
+                }
+            }
+
+            Mesh mesh = new Mesh();
+            mesh.vertices = vertices.Select(x => x.ToVector3()).ToArray();
+            mesh.triangles = triangles;
+            mesh.uv = uvs;
+            mesh.RecalculateNormals();
+
+            return mesh;
+        }
 
         void ConstructNormalizedMesh(ref Mesh mesh, int iFace)
         {
@@ -140,7 +204,7 @@ namespace Ru1t3rl.Planets
                 }
                 else
                     iStart++;
-            } while (!noiseLayers[iStart].enabled && iStart <= noiseLayers.Length - 1);
+            } while (iStart < noiseLayers.Length - 1 && !noiseLayers[iStart].enabled);
 
             for (int iLayer = iStart; iLayer < noiseLayers.Length; iLayer++)
             {

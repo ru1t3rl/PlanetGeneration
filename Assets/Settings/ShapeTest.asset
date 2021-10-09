@@ -40,7 +40,7 @@ MonoBehaviour:
       minValue: 0
   - name: Flatten
     enabled: 1
-    blendMode: 2
+    blendMode: 1
     settings:
       seed: base
       strength: 0.01

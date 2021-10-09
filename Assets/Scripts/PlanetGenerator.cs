@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Ru1t3rl.Planets;
 using Ru1t3rl.Noises;
+using System.Linq;
 
 namespace Ru1t3rl
 {
@@ -14,6 +15,7 @@ namespace Ru1t3rl
         [SerializeField] Material material;
 
         MeshFilter[] meshFilters;
+        MeshRenderer[] meshRenderers;
         PlanetFace[] planetFaces;
 
         Vector3[] directions = { Vector3.up, Vector3.down,
@@ -21,8 +23,8 @@ namespace Ru1t3rl
                                  Vector3.forward, Vector3.back};
 
         [SerializeField] ShapeSettings shapeSettings;
-        [SerializeField] Gradient planetGradient;
-        [SerializeField] Texture2D gradientTexture;
+        [SerializeField] Gradient albedoGradient, smoothnessGradient, metallicGradient;
+        Texture2D albedoTexture, smoothnessTexture, metallicTexture;
         [SerializeField] int stepCount;
         [SerializeField] Vector2Int gradientMapSize;
 
@@ -39,6 +41,7 @@ namespace Ru1t3rl
             if (meshFilters == null || meshFilters.Length == 0)
             {
                 meshFilters = new MeshFilter[6];
+                meshRenderers = new MeshRenderer[6];
 
                 for (int i = transform.childCount; i-- > 0;)
                 {
@@ -54,7 +57,8 @@ namespace Ru1t3rl
                 {
                     GameObject face = new GameObject($"Face_{i + 1}");
                     face.transform.parent = transform;
-                    face.AddComponent<MeshRenderer>().sharedMaterial = material;
+                    meshRenderers[i] = face.AddComponent<MeshRenderer>();
+                    meshRenderers[i].sharedMaterial = material;
                     meshFilters[i] = face.AddComponent<MeshFilter>();
                 }
 
@@ -68,6 +72,8 @@ namespace Ru1t3rl
                     i
                 );
 
+                meshFilters[i].transform.localPosition = Vector3.zero;
+
                 min = planetFaces[i].min < min ? planetFaces[i].min : min;
                 max = planetFaces[i].max > max ? planetFaces[i].max : max;
             }
@@ -80,16 +86,29 @@ namespace Ru1t3rl
 
         public void ApplyGradientTexture()
         {
+            meshRenderers.Select(x => x.sharedMaterial = material);
             material.SetFloat("_Min", min);
             material.SetFloat("_Max", max);
-            material.SetTexture("_GradientTex", gradientTexture != null
-                ? gradientTexture
-                : planetGradient.ToTexture2D(stepCount, gradientMapSize));
+            material.SetFloat("_BaseHeight", shapeSettings.radius);
+
+            material.SetTexture("_GradientAlbedo", albedoTexture != null
+                ? albedoTexture
+                : albedoGradient.ToTexture2D(stepCount, gradientMapSize));
+
+            material.SetTexture("_GradientSmoothness", smoothnessTexture != null
+                ? smoothnessTexture
+                : smoothnessGradient.ToTexture2D(stepCount, gradientMapSize));
+
+            material.SetTexture("_GradientMetallic", metallicTexture != null
+                ? metallicTexture
+                : metallicGradient.ToTexture2D(stepCount, gradientMapSize));
         }
 
         public void SaveGradientTexture()
         {
-            gradientTexture = planetGradient.ToTexture2D(stepCount, gradientMapSize);
+            albedoTexture = albedoGradient.ToTexture2D(stepCount, gradientMapSize);
+            smoothnessTexture = smoothnessGradient.ToTexture2D(stepCount, gradientMapSize);
+            metallicTexture = metallicGradient.ToTexture2D(stepCount, gradientMapSize);
         }
     }
 }
