@@ -16,6 +16,7 @@ namespace Ru1t3rl.Planets
         public float min { get; private set; }
         public float max { get; private set; }
 
+        #region Basic Spheres
         public Mesh Generate(int resolution, Vectori localUp, NoiseLayer noiseLayer, ShapeSettings shapeSettings, bool spherified = true, int iFace = 0)
         {
             this.localUp = localUp;
@@ -58,18 +59,6 @@ namespace Ru1t3rl.Planets
             return mesh;
         }
 
-        public async Task<Mesh[]> Generate(int resolution, Vectori localUp, NoiseLayer[] noiseLayers, ShapeSettings shapeSettings, int nChunks, bool spherified = true, int iFace = 0)
-        {
-            this.localUp = localUp;
-            this.resolution = resolution;
-            this.noiseLayers = noiseLayers;
-            this.shapeSettings = shapeSettings;
-
-            Mesh[] mesh = new Mesh[nChunks * nChunks];
-
-            return mesh;
-        }
-
         public void Generate(ref Mesh mesh, int resolution, Vectori localUp, NoiseLayer noiseLayer, ShapeSettings shapeSettings, bool spherified = true, int iFace = 0)
         {
             this.resolution = resolution;
@@ -87,59 +76,6 @@ namespace Ru1t3rl.Planets
                 ConstructSpherifiedMesh(ref mesh, iFace);
             else
                 ConstructNormalizedMesh(ref mesh, iFace);
-        }
-
-        /// <summary>
-        /// Generate a chucnk of the face
-        /// </summary>
-        /// <param name="iFace">The current face</param>
-        /// <param name="cChunk">The current chunk</param>
-        /// <param name="nChunks"> The number of chunks</param>
-        async Task<Mesh> GenerateMeshNormalizedAsync(int iFace, int cChunck, int nChunks)
-        {
-            Vectori[] vertices = new Vectori[resolution * resolution];
-            Vector2[] uvs = new Vector2[vertices.Length];
-            int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
-            int triIndex = 0;
-
-            for (int y = 0, i = 0; y < resolution; y++)
-            {
-                for (int x = 0; x < resolution; x++, i++)
-                {
-                    Vector2 percent = new Vector2(x, y) / (resolution - 1);
-                    Vectori pointOnUnitCube = (localUp + axisA * (percent.x - .5f) * 2 + axisB * (percent.y - .5f) * 2) / nChunks * cH;
-                    Vectori pointOnUnitSphere = pointOnUnitCube.normalized;
-                    vertices[i] = CalculatePointOnSphere(pointOnUnitSphere);
-
-                    if (x != resolution - 1 && y != resolution - 1)
-                    {
-                        triangles[triIndex] = i;
-                        triangles[triIndex + 1] = i + resolution + 1;
-                        triangles[triIndex + 2] = i + resolution;
-
-                        triangles[triIndex + 3] = i;
-                        triangles[triIndex + 4] = i + 1;
-                        triangles[triIndex + 5] = i + resolution + 1;
-                        triIndex += 6;
-                    }
-
-                    float offsetX = ((localUp.x + localUp.z) + 1) * (1 / 3);
-                    float offsetY = localUp.y / 2;
-
-                    uvs[i] = new Vector2(
-                        (x / resolution) / 3f + offsetX,
-                        (y / resolution) / 2f + offsetY
-                    );
-                }
-            }
-
-            Mesh mesh = new Mesh();
-            mesh.vertices = vertices.Select(x => x.ToVector3()).ToArray();
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.RecalculateNormals();
-
-            return mesh;
         }
 
         void ConstructNormalizedMesh(ref Mesh mesh, int iFace)
@@ -276,5 +212,136 @@ namespace Ru1t3rl.Planets
             mesh.triangles = triangles;
             mesh.RecalculateNormals();
         }
+        #endregion
+
+        #region Chunks
+        public async Task<Mesh[]> GenerateChunksAsync(int resolution, Vectori localUp, NoiseLayer[] noiseLayers, ShapeSettings shapeSettings, Vector2Int nChunks, bool spherified = true, int iFace = 0)
+        {
+            this.localUp = localUp;
+            this.resolution = resolution;
+            this.noiseLayers = noiseLayers;
+            this.shapeSettings = shapeSettings;
+
+            axisA = new Vectori(localUp.y, localUp.z, localUp.x);
+            axisB = Vectori.Cross(localUp, axisA);
+
+            min = float.MaxValue;
+            max = float.MinValue;
+
+            Task<Mesh>[] chunkTasks = new Task<Mesh>[nChunks.x * nChunks.y];
+            for (int i = 0; i < chunkTasks.Length; i++)
+            {
+                chunkTasks[i] = spherified ? ConstructSpherifiedChunkAsync(iFace, i, nChunks) : ConstructNormalizedChunkAsync(iFace, i, nChunks);
+            }
+
+            return await Task.WhenAll(chunkTasks);
+        }
+
+        async Task<Mesh> ConstructNormalizedChunkAsync(int iFace, int iChunk, Vector2Int nChunks)
+        {
+            Vectori[] vertices = new Vectori[resolution * resolution];
+            Vector2[] uvs = new Vector2[vertices.Length];
+            int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
+            int triIndex = 0;
+
+            Vector2Int chunkIndex = new Vector2Int(iChunk % nChunks.x, Mathf.FloorToInt(iChunk / nChunks.x));
+
+            for (int y = 0, i = 0; y < resolution; y++)
+            {
+                for (int x = 0; x < resolution; x++, i++)
+                {
+                    Vector2 percent = new Vector2(1f / nChunks.x * chunkIndex.x + (x / (resolution - 1f)) * (1f / nChunks.x),
+                                                  1f / nChunks.y * chunkIndex.y + (y / (resolution - 1f)) * (1f / nChunks.y));
+                    Vectori pointOnUnitCube = localUp + axisA * (percent.x - .5f) * 2 + axisB * (percent.y - .5f) * 2;
+                    Vectori pointOnUnitSphere = pointOnUnitCube.normalized;
+                    vertices[i] = CalculatePointOnSphere(pointOnUnitSphere);
+
+                    if (x != resolution - 1 && y != resolution - 1)
+                    {
+                        triangles[triIndex] = i;
+                        triangles[triIndex + 1] = i + resolution + 1;
+                        triangles[triIndex + 2] = i + resolution;
+
+                        triangles[triIndex + 3] = i;
+                        triangles[triIndex + 4] = i + 1;
+                        triangles[triIndex + 5] = i + resolution + 1;
+                        triIndex += 6;
+                    }
+
+                    float offsetX = ((localUp.x + localUp.z) + 1) * (1 / 3);
+                    float offsetY = localUp.y / 2;
+
+                    uvs[i] = new Vector2(
+                        (x / resolution) / 3f + offsetX,
+                        (y / resolution) / 2f + offsetY
+                    );
+                }
+            }
+
+            Mesh mesh = new Mesh();
+            mesh.Clear();
+
+            mesh.name = $"Chunk_{chunkIndex}";
+
+            mesh.vertices = vertices.Select(x => x.ToVector3()).ToArray();
+            mesh.triangles = triangles;
+            mesh.uv = uvs;
+            mesh.RecalculateNormals();
+
+            await Task.Delay(0);
+
+            return mesh;
+        }
+
+        async Task<Mesh> ConstructSpherifiedChunkAsync(int iFace, int iChunk, Vector2Int nChunks)
+        {
+            Vectori[] vertices = new Vectori[resolution * resolution];
+            int[] triangles = new int[(resolution - 1) * (resolution - 1) * 6];
+            int triIndex = 0;
+
+            Vector2Int chunkIndex = new Vector2Int(iChunk % nChunks.x, Mathf.FloorToInt(iChunk / nChunks.x));
+
+            for (int y = 0; y < resolution; y++)
+            {
+                for (int x = 0; x < resolution; x++)
+                {
+                    int i = x + y * resolution;
+                    Vector2 percent = new Vector2(1f / nChunks.x * chunkIndex.x + (x / (resolution - 1f)) * (1f / nChunks.x),
+                                                  1f / nChunks.y * chunkIndex.y + (y / (resolution - 1f)) * (1f / nChunks.y));
+                    Vectori p = localUp + axisA * (percent.x - .5f) * 2 + axisB * (percent.y - .5f) * 2;
+                    Vectori p2 = p * p;
+                    Vectori pointOnUnitSphere = Vectori.zero;
+                    pointOnUnitSphere.x = p.x * Mathf.Sqrt(1f - p2.y * .5f - p2.z * .5f + p2.y * p2.z / 3f);
+                    pointOnUnitSphere.y = p.y * Mathf.Sqrt(1f - p2.x * .5f - p2.z * .5f + p2.z * p2.x / 3f);
+                    pointOnUnitSphere.z = p.z * Mathf.Sqrt(1f - p2.x * .5f - p2.y * .5f + p2.x * p2.y / 3f);
+
+                    vertices[i] = CalculatePointOnSphere(pointOnUnitSphere);
+
+                    if (x != resolution - 1 && y != resolution - 1)
+                    {
+                        triangles[triIndex] = i;
+                        triangles[triIndex + 1] = i + resolution + 1;
+                        triangles[triIndex + 2] = i + resolution;
+
+                        triangles[triIndex + 3] = i;
+                        triangles[triIndex + 4] = i + 1;
+                        triangles[triIndex + 5] = i + resolution + 1;
+                        triIndex += 6;
+                    }
+                }
+            }
+
+            Mesh mesh = new Mesh();
+
+            mesh.name = $"Chunk_{chunkIndex}";
+            mesh.vertices = vertices.Select(x => x.ToVector3()).ToArray();
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+
+            await Task.Delay(0);
+
+            return mesh;
+        }
+        #endregion
     }
 }

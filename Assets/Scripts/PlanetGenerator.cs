@@ -28,13 +28,16 @@ namespace Ru1t3rl
         [SerializeField] int stepCount;
         [SerializeField] Vector2Int gradientMapSize;
 
+
+        [Header("Chunk Stuff")]
+        [SerializeField] Vector2Int chunkSize;
+
         ShapeSettings prevShapeSettings;
 
         float min, max;
 
         public void GenerateMesh()
         {
-
             Vectori test = new Vectori(10, 20, 1);
             Vectori test2 = new Vectori(5, 10, 60);
 
@@ -84,6 +87,60 @@ namespace Ru1t3rl
             ApplyGradientTexture();
         }
 
+        public async void GenerateChunks()
+        {
+            for (int i = transform.childCount; i-- > 0;)
+            {
+                DestroyImmediate(transform.GetChild(i).gameObject);
+            }
+
+            meshFilters = new MeshFilter[chunkSize.x * chunkSize.y * 6];
+            meshRenderers = new MeshRenderer[meshFilters.Length];
+            planetFaces = new PlanetFace[6];
+
+            for (int iFace = 0; iFace < 6; iFace++)
+            {
+                GameObject face = new GameObject($"Face_{iFace + 1}");
+                face.transform.parent = transform;
+
+                planetFaces[iFace] = new PlanetFace();
+                Mesh[] chunks = await planetFaces[iFace].GenerateChunksAsync(
+                    resolution,
+                    new Vectori(directions[iFace].x, directions[iFace].y, directions[iFace].z),
+                    shapeSettings.noiseLayers,
+                    shapeSettings,
+                    chunkSize,
+                    spherified,
+                    iFace
+                );
+
+                for (int iChunk = 0; iChunk < chunks.Length; iChunk++)
+                {
+                    GameObject chunk = new GameObject($"{chunks[iChunk].name}");
+                    chunk.transform.SetParent(face.transform);
+
+                    meshFilters[iFace] = chunk.AddComponent<MeshFilter>();
+                    meshRenderers[iFace] = chunk.AddComponent<MeshRenderer>();
+
+                    meshFilters[iFace].mesh = chunks[iChunk];
+                    meshRenderers[iFace].sharedMaterial = material;
+
+                    chunk.transform.localPosition = Vector3.zero;
+                }
+
+                face.transform.localPosition = Vector3.zero;
+
+                min = planetFaces[iFace].min < min ? planetFaces[iFace].min : min;
+                max = planetFaces[iFace].max > max ? planetFaces[iFace].max : max;
+            }
+
+            material.SetFloat("_Min", min);
+            material.SetFloat("_Max", max);
+
+            ApplyGradientTexture();
+        }
+
+        #region Shader Setup
         public void ApplyGradientTexture()
         {
             meshRenderers.Select(x => x.sharedMaterial = material);
@@ -110,5 +167,6 @@ namespace Ru1t3rl
             smoothnessTexture = smoothnessGradient.ToTexture2D(stepCount, gradientMapSize);
             metallicTexture = metallicGradient.ToTexture2D(stepCount, gradientMapSize);
         }
+        #endregion
     }
 }

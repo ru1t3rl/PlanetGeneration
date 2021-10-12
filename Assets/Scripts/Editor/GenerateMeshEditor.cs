@@ -32,6 +32,11 @@ namespace Ru1t3rl
             {
                 gm.GenerateMesh();
             }
+
+            if (GUILayout.Button("Generate Chunks"))
+            {
+                gm.GenerateChunks();
+            }
         }
     }
 }
