@@ -89,7 +89,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BaseHeight: 2
+    - _BaseHeight: 1.64
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -98,7 +98,7 @@ Material:
     - _Glossiness: 0.914
     - _GlossyReflections: 1
     - _HeightOffset: 2.16
-    - _Max: 0.4707253
+    - _Max: 1
     - _Metallic: 1
     - _Min: 0
     - _Mode: 0

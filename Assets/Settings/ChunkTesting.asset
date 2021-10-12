@@ -18,14 +18,14 @@ MonoBehaviour:
     enabled: 1
     blendMode: 0
     settings:
-      seed: default
+      seed: 
       strength: 0.6
       numLayers: 1
       baseRoughness: 0.7
       roughness: 1
-      persistence: 0.01
+      persistence: 0.05
       centre: {x: 0, y: 0, z: 0}
-      minValue: 0.1
+      minValue: 0.03
   - name: Mountains - Detail 1
     enabled: 1
     blendMode: 0
