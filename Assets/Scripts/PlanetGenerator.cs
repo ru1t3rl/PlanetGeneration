@@ -30,7 +30,7 @@ namespace Ru1t3rl
 
 
         [Header("Chunk Stuff")]
-        [SerializeField] Vector2Int chunkSize;
+        public Vector2Int chunkSize;
 
         ShapeSettings prevShapeSettings;
 

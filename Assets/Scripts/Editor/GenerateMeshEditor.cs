@@ -37,6 +37,11 @@ namespace Ru1t3rl
             {
                 gm.GenerateChunks();
             }
+
+            if (gm.chunkSize.x <= 0)
+                gm.chunkSize.x = 1;
+            if (gm.chunkSize.y <= 0)
+                gm.chunkSize.y = 1;
         }
     }
 }
