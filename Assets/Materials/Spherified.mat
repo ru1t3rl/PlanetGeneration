@@ -95,9 +95,9 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 1
+    - _Glossiness: 0.897
     - _GlossyReflections: 1
-    - _HeightOffset: 2.26
+    - _HeightOffset: 2.53
     - _Max: 0.18073255
     - _Metallic: 1
     - _Min: 0

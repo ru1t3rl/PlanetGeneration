@@ -95,10 +95,10 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.914
+    - _Glossiness: 1
     - _GlossyReflections: 1
-    - _HeightOffset: 2.16
-    - _Max: 0.57290375
+    - _HeightOffset: 2.35
+    - _Max: 1
     - _Metallic: 1
     - _Min: 0
     - _Mode: 0

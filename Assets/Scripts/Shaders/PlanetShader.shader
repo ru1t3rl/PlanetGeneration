@@ -25,7 +25,7 @@ Shader "Custom/PlanetShader"
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows vertex:vert
+        #pragma surface surf Standard fullforwardshadows
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
@@ -33,7 +33,7 @@ Shader "Custom/PlanetShader"
         struct Input
         {
             float2 uv_MainTex;
-            float3 localPos;
+            float3 worldPos;
         };
 
         
@@ -66,16 +66,20 @@ Shader "Custom/PlanetShader"
             return OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
         }
 
+        /*
         void vert(inout appdata_full v, out Input o) {
             UNITY_INITIALIZE_OUTPUT(Input, o);
             o.localPos = v.vertex.xyz;
-        }        
+        } 
+        */       
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            float3 localPos = IN.worldPos -  mul(unity_ObjectToWorld, float4(0,0,0,1)).xyz;
+
             _Max += _BaseHeight;
 
-            float height = length(IN.localPos) / (_Max - _Min) + _HeightOffset;  
+            float height = length(localPos) / (_Max - _Min) + _HeightOffset;  
             float4 color = tex2D(_GradientAlbedo, float2(height, 0));
             float smoothness = tex2D(_GradientSmoothness, float2(height, 0)) * _Glossiness;
             float metallic = tex2D(_GradientMetallic, float2(height, 0)).r * _Metallic;
