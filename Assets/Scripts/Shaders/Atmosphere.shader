@@ -1,90 +1,91 @@
-Shader "Custom/Atmosphere" {
-    Properties {
-
+Shader "Custom/Atmosphere"
+{
+    Properties
+    {
+        _Color ("Color", Color) = (1,1,1,1)
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _Glossiness ("Smoothness", Range(0,1)) = 0.5
+        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _SphereRadius("Sphere Radius", Float) = 1
+        _SpherePosition("Sphere Position", vector) = (0, 0, 0, 0)
+        _Thickness("Thinkess", float) = 1
     }
-    SubShader {
-        Tags { "RenderQueue"="Opaque"}
+    SubShader
+    {
+        Tags {"Queue" = "Transparent" "RenderType"="Transparent" }
+        LOD 200
 
-        // #include "Common.cg"    
+        Blend SrcAlpha OneMinusSrcAlpha
 
-        #pragma vert:vertout
+        CGPROGRAM
+        // Physically based Standard lighting model, and enable shadows on all light types
+        #pragma surface surf Standard alpha:blend
 
-        vertout main(float4 gl_Vertex : POSITION,    
-        uniform float4x4 gl_ModelViewProjectionMatrix,    
-        uniform float3 v3CameraPos,     // The camera's current position      
-        uniform float3 v3LightDir,      // Direction vector to the light source    
-        uniform float3 v3InvWavelength, // 1 / pow(wavelength, 4) for RGB    
-        uniform float fCameraHeight,    // The camera's current height      
-        uniform float fCameraHeight2,   // fCameraHeight^2    
-        uniform float fOuterRadius,     // The outer (atmosphere) radius    
-        uniform float fOuterRadius2,    // fOuterRadius^2      
-        uniform float fInnerRadius,     // The inner (planetary) radius    
-        uniform float fInnerRadius2,    // fInnerRadius^2    
-        uniform float fKrESun,          // Kr * ESun      
-        uniform float fKmESun,          // Km * ESun    
-        uniform float fKr4PI,           // Kr * 4 * PI    
-        uniform float fKm4PI,           // Km * 4 * PI      
-        uniform float fScale,           // 1 / (fOuterRadius - fInnerRadius)    
-        uniform float fScaleOverScaleDepth) // fScale / fScaleDepth  
-        {    
-            // Get the ray from the camera to the vertex and its length (which    
-            // is the far point of the ray passing through the atmosphere)      
-            float3 v3Pos = gl_Vertex.xyz;    
-            float3 v3Ray = v3Pos - v3CameraPos;    
-            float fFar = length(v3Ray);    v3Ray /= fFar;      
-            
-            // Calculate the closest intersection of the ray with    
-            // the outer atmosphere (point A in Figure 16-3)      
-            float fNear = getNearIntersection(v3CameraPos, v3Ray, fCameraHeight2, fOuterRadius2);      
-            
-            // Calculate the ray's start and end positions in the atmosphere,    
-            // then calculate its scattering offset    
-            float3 v3Start = v3CameraPos + v3Ray * fNear;    
-            fFar -= fNear;    
-            float fStartAngle = dot(v3Ray, v3Start) / fOuterRadius;    
-            float fStartDepth = exp(-fInvScaleDepth);    
-            float fStartOffset = fStartDepth * scale(fStartAngle);      
-            
-            // Initialize the scattering loop variables      
-            float fSampleLength = fFar / fSamples;    
-            float fScaledLength = fSampleLength * fScale;    
-            float3 v3SampleRay = v3Ray * fSampleLength;    
-            float3 v3SamplePoint = v3Start + v3SampleRay * 0.5;      
-            
-            // Now loop through the sample points    
-            float3 v3FrontColor = float3(0.0, 0.0, 0.0);    
-            for(int i=0; i<nSamples; i++) {      
-                float fHeight = length(v3SamplePoint);      
-                float fDepth = exp(fScaleOverScaleDepth * (fInnerRadius - fHeight));      
-                float fLightAngle = dot(v3LightDir, v3SamplePoint) / fHeight;      
-                float fCameraAngle = dot(v3Ray, v3SamplePoint) / fHeight;      
-                float fScatter = (fStartOffset + fDepth * (scale(fLightAngle) Ð scale(fCameraAngle)));      
-                float3 v3Attenuate = exp(-fScatter * (v3InvWavelength * fKr4PI + fKm4PI));      
-                v3FrontColor += v3Attenuate * (fDepth * fScaledLength);      
-                v3SamplePoint += v3SampleRay;    
-            }      
-            
-            // Finally, scale the Mie and Rayleigh colors      
-            vertout OUT;    
-            OUT.pos = mul(gl_ModelViewProjectionMatrix, gl_Vertex);    
-            OUT.c0.rgb = v3FrontColor * (v3InvWavelength * fKrESun);    
-            OUT.c1.rgb = v3FrontColor * fKmESun;    
-            OUT.t0 = v3CameraPos - v3Pos;    
-            return OUT;  
-        } 
+        // Use shader model 3.0 target, to get nicer looking lighting
+        #pragma target 3.0
 
-        float4 main(float4 c0 : COLOR0,    
-        float4 c1 : COLOR1,    
-        float3 v3Direction : TEXCOORD0,    
-        uniform float3 v3LightDirection,    
-        uniform float g,    
-        uniform float g2) : COLOR    
-        {    
-            float fCos = dot(v3LightDirection, v3Direction) / length(v3Direction);    
-            float fCos2 = fCos * fCos;    
-            float4 color = getRayleighPhase(fCos2) * c0 + getMiePhase(fCos, fCos2, g, g2) * c1;    
-            color.a = color.b;    
-            return color;  
-        } 
+        sampler2D _MainTex;
+
+        struct Input
+        {
+            float2 uv_MainTex;
+            float3 viewDir;
+            float3 worldPos;
+        };
+
+        half _Glossiness;
+        half _Metallic;
+        float _SphereRadius, _Thickness;
+        float3 _SpherePosition;
+        fixed4 _Color;
+
+        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
+        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
+        // #pragma instancing_options assumeuniformscaling
+        UNITY_INSTANCING_BUFFER_START(Props)
+        // put more per-instance properties here
+        UNITY_INSTANCING_BUFFER_END(Props)
+
+        bool raySphereIntersectBool(float3 ro, float3 rd, float3 so, float sr) {
+            float t = dot(so-ro, rd);
+            float3 P = ro + rd*t;
+            float y = length(so-P);
+
+            return y <= sr;
+        }
+
+        float2 raySphereIntersectBasic(float3 ro, float3 rd, float3 so, float sr) {
+            float t = dot(so-ro, rd);
+            float3 P = ro + rd*t;
+            float y = length(so-P);
+
+            if(y > sr){
+                return float2(-1, -1);
+            }
+
+            float x = sqrt(sr * sr - y * y);
+            float t1 = max(t - x, 0);
+            float t2 = t + x;
+
+            return float2(t1, t2);
+        }
+
+        void surf (Input IN, inout SurfaceOutputStandard o)
+        {
+            float3 so = -(float4(_SpherePosition, 1) * _WorldSpaceCameraPos);
+            float2 rsi = raySphereIntersectBasic(_WorldSpaceCameraPos, normalize(IN.viewDir), so, _SphereRadius);
+
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+            c = (1, 1, 1, 1);          
+            
+            o.Albedo = c.rgb;
+
+            o.Metallic = _Metallic;
+            o.Smoothness = _Glossiness;
+            
+            o.Alpha = clamp((rsi.y - rsi.x) * _Thickness, 0, 1);
+        }
+        ENDCG
     }
+    FallBack "Diffuse"
 }
