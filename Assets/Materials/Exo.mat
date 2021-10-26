@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Spherified
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION _GLOSSYREFLECTIONS_OFF _USEEMISSION_ON
-  m_LightmapFlags: 2
+  m_Name: Exo
+  m_Shader: {fileID: 4800000, guid: e92feee8620b31f4fad8601ea1484fb7, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -89,7 +89,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BaseHeight: 1
+    - _BaseHeight: 2
     - _BumpScale: 1
     - _CubeMapStrength: 0
     - _Cutoff: 0.5
@@ -97,28 +97,28 @@ Material:
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 1
-    - _GlossyReflections: 0
+    - _GlossyReflections: 1
     - _GradientAlbedoStrength: 1
-    - _HeightOffset: 2.11
+    - _HeightOffset: -1
     - _Max: 0
-    - _MaxDist: 1.4
+    - _MaxDist: 25.1
     - _Metallic: 1
     - _Min: 0
     - _MinDist: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Phong: 0.797
+    - _Phong: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Tess: 4
+    - _Tess: 23.8
     - _UVSec: 0
     - _UseCubeMap: 0
-    - _UseEmission: 1
+    - _UseEmission: 0
     - _XValue: 3.49
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.55372715, b: 0, a: 1}
-    - _EmissionColor: {r: 1.9999998, g: 0.5870858, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

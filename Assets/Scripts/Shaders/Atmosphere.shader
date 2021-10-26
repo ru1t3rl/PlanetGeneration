@@ -76,7 +76,7 @@ Shader "Custom/Atmosphere"
             float2 rsi = raySphereIntersectBasic(_WorldSpaceCameraPos, normalize(IN.viewDir), so, _SphereRadius);
 
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            c = (1, 1, 1, 1);          
+            c = float4(1, 1, 1, 1);          
             
             o.Albedo = c.rgb;
 

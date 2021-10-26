@@ -267,14 +267,6 @@ namespace Ru1t3rl.Planets
                         triangles[triIndex + 5] = i + resolution + 1;
                         triIndex += 6;
                     }
-
-                    float offsetX = ((localUp.x + localUp.z) + 1) * (1 / 3);
-                    float offsetY = localUp.y / 2;
-
-                    uvs[i] = new Vector2(
-                        (x / resolution) / 3f + offsetX,
-                        (y / resolution) / 2f + offsetY
-                    );
                 }
             }
 

@@ -22,7 +22,8 @@ namespace Ru1t3rl
                                  Vector3.left, Vector3.right,
                                  Vector3.forward, Vector3.back};
 
-        [SerializeField] ShapeSettings shapeSettings;
+        [SerializeField] ShapeSettings _shapeSettings;
+        public ShapeSettings shapeSettings => _shapeSettings;
         [SerializeField] Gradient albedoGradient, smoothnessGradient, metallicGradient;
         Texture2D albedoTexture, smoothnessTexture, metallicTexture;
         [SerializeField] int stepCount;
@@ -69,8 +70,8 @@ namespace Ru1t3rl
                 meshFilters[i].sharedMesh = planetFaces[i].Generate(
                     resolution,
                     new Vectori(directions[i].x, directions[i].y, directions[i].z),
-                    shapeSettings.noiseLayers,
-                    shapeSettings,
+                    _shapeSettings.noiseLayers,
+                    _shapeSettings,
                     spherified,
                     i
                 );
@@ -107,8 +108,8 @@ namespace Ru1t3rl
                 Mesh[] chunks = await planetFaces[iFace].GenerateChunksAsync(
                     resolution,
                     new Vectori(directions[iFace].x, directions[iFace].y, directions[iFace].z),
-                    shapeSettings.noiseLayers,
-                    shapeSettings,
+                    _shapeSettings.noiseLayers,
+                    _shapeSettings,
                     chunkSize,
                     spherified,
                     iFace
@@ -146,7 +147,7 @@ namespace Ru1t3rl
             meshRenderers.Select(x => x.sharedMaterial = material);
             material.SetFloat("_Min", min);
             material.SetFloat("_Max", max);
-            material.SetFloat("_BaseHeight", shapeSettings.radius);
+            material.SetFloat("_BaseHeight", _shapeSettings.radius);
 
             material.SetTexture("_GradientAlbedo", albedoTexture != null
                 ? albedoTexture

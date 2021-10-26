@@ -7,7 +7,7 @@ using Ru1t3rl.Noises;
 
 namespace Ru1t3rl
 {
-    [CreateAssetMenu(fileName = "Shape_Settings", menuName = "Noise/Shape Settings")]
+    [CreateAssetMenu(fileName = "Shape_Settings", menuName = "Planets/Shape Settings")]
     public class ShapeSettings : ScriptableObject
     {
         public float radius = 1;

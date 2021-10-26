@@ -23,9 +23,9 @@ MonoBehaviour:
       numLayers: 1
       baseRoughness: 0.7
       roughness: 1
-      persistence: 0.05
+      persistence: 0.5
       centre: {x: 0, y: 0, z: 0}
-      minValue: 0.03
+      minValue: 0.1
   - name: Mountains - Detail 1
     enabled: 1
     blendMode: 0
@@ -35,9 +35,9 @@ MonoBehaviour:
       numLayers: 8
       baseRoughness: 1
       roughness: 2
-      persistence: 0.7
+      persistence: 0.8
       centre: {x: 0, y: 0, z: 0}
-      minValue: 0
+      minValue: 0.1
   - name: LowLands - Flatten
     enabled: 1
     blendMode: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
       centre: {x: 0, y: 0, z: 0}
       minValue: 0
   - name: Planet Shape
-    enabled: 1
+    enabled: 0
     blendMode: 1
     settings:
       seed: default

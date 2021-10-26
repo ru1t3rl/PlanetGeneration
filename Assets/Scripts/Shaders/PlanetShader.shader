@@ -1,13 +1,31 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Custom/PlanetShader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)     
+        _Tess ("Tessellation", Range(1, 32)) = 4
+        _Phong ("Phong Strengh", Range(0,1)) = 0.5
+        _MinDist("Min distance", Range(0, 10)) = 1
+        _MaxDist("Max distance", Range(0, 30)) = 20
+
+        [Toggle] _UseEmission("Use Emission", float) = 0
+        _MainTex("Cube Map", Cube) = "black" {}
+        _CubeMapStrength("Cube Map Strength", Range(0, 1)) = .5
+        _GradientAlbedoStrength("Gradient Strength", Range(0, 1)) = .5
+        
         _Min ("Min", Float) = 0
         _Max ("Max", Float) = 1
         
         _GradientAlbedo("Gradient Albedo", 2D) = "white" {}
         
+
         _GradientSmoothness("Smoothness Gradient", 2D) = "grey" {}         
         _Glossiness ("Smoothness Intensity", Range(0,1)) = 0.5   
 
@@ -23,26 +41,26 @@ Shader "Custom/PlanetShader"
         Tags { "RenderType"="Opaque" }
         LOD 200
 
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
-
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+        CGPROGRAM        
+        #pragma surface surf Standard fullforwardshadows tessellate:tessDistance tessphong:_Phong
+        #pragma target 5.0
+        #include "Tessellation.cginc"
 
         struct Input
         {
             float2 uv_MainTex;
             float3 worldPos;
+            float3 localPos;
         };
 
-        
+        float _UseEmission;
         sampler2D _GradientAlbedo, _GradientSmoothness, _GradientMetallic;
+        samplerCUBE _MainTex;
         uniform float _Min = 0, _Max = 0;
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        float _HeightOffset, _BaseHeight;
+        float _HeightOffset, _BaseHeight, _CubeMapStrength, _GradientAlbedoStrength;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -66,12 +84,12 @@ Shader "Custom/PlanetShader"
             return OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
         }
 
-        /*
-        void vert(inout appdata_full v, out Input o) {
-            UNITY_INITIALIZE_OUTPUT(Input, o);
-            o.localPos = v.vertex.xyz;
-        } 
-        */       
+        float _Phong, _Tess, _MinDist, _MaxDist;
+        float4 tessDistance (appdata_full v0, appdata_full v1, appdata_full v2) {
+            float minDist = _MinDist;
+            float maxDist = _MaxDist;
+            return UnityDistanceBasedTess(v0.vertex, v1.vertex, v2.vertex, minDist, maxDist, _Tess);
+        }
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
@@ -84,8 +102,13 @@ Shader "Custom/PlanetShader"
             float smoothness = tex2D(_GradientSmoothness, float2(height, 0)) * _Glossiness;
             float metallic = tex2D(_GradientMetallic, float2(height, 0)).r * _Metallic;
 
-            o.Albedo = color;// * height;
+            float4 color2 =texCUBE(_MainTex, float3(localPos.x, localPos.y, localPos.z)) * _CubeMapStrength + color * _GradientAlbedoStrength;
+            o.Albedo = color2;// * height;
             o.Alpha = 1 - height;
+            
+            if(_UseEmission)
+            o.Emission = color2;
+
             // Metallic and smoothness come from slider variables
             o.Metallic = metallic;
             o.Smoothness = smoothness;
