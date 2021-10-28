@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Ru1t3rl.Planets;
-using Ru1t3rl.Noises;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace Ru1t3rl
@@ -36,6 +36,11 @@ namespace Ru1t3rl
         ShapeSettings prevShapeSettings;
 
         float min, max;
+
+        void OnValidate()
+        {
+            ApplyGradientTexture();
+        }
 
         void Awake()
         {
@@ -147,11 +152,15 @@ namespace Ru1t3rl
         }
 
         #region Shader Setup
-        public void ApplyGradientTexture()
+        public async void ApplyGradientTexture()
         {
             try
             {
+                if (meshRenderers == null)
+                    meshRenderers = await GatherMeshRenderers(this.transform);
+
                 meshRenderers.Select(x => x.sharedMaterial = material);
+
                 material.SetFloat("_Min", min);
                 material.SetFloat("_Max", max);
                 material.SetFloat("_BaseHeight", _shapeSettings.radius);
@@ -180,6 +189,37 @@ namespace Ru1t3rl
             smoothnessTexture = smoothnessGradient.ToTexture2D(stepCount, gradientMapSize);
             metallicTexture = metallicGradient.ToTexture2D(stepCount, gradientMapSize);
         }
+
+        /// <summary>
+        ///  Get the mesh renderers of all children recursive async
+        /// </summary>
+        /// <param name="transform">The transform to search it's children</param>
+        /// <return>The mesh renderers present in all the childeren</return>
+        async Task<MeshRenderer[]> GatherMeshRenderers(Transform transform)
+        {
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            Task<MeshRenderer[]>[] childTasks = new Task<MeshRenderer[]>[transform.childCount + 1];
+
+            for (int iTask = 0; iTask < childTasks.Length; iTask++)
+            {
+                childTasks[iTask] = GatherMeshRenderers(transform.GetChild(iTask));
+            }
+
+            for (int iChild = 0; iChild < transform.childCount; iChild++)
+            {
+                renderers.Add(transform.GetChild(iChild).GetComponent<MeshRenderer>());
+            }
+
+            await Task.WhenAll(childTasks);
+
+            for (int iTask = 0; iTask < childTasks.Length; iTask++)
+            {
+                renderers.AddRange(childTasks[iTask].Result);
+            }
+
+            return renderers.ToArray();
+        }
+
         #endregion
     }
 }

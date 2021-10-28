@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ru1t3rl.Planets
+namespace Ru1t3rl.Planets.Atmos
 {
     [RequireComponent(typeof(PlanetGenerator))]
     [ExecuteInEditMode, ImageEffectAllowedInSceneView]
@@ -49,12 +49,6 @@ namespace Ru1t3rl.Planets
             _Material.name = $"{gameObject.name}_Atmosphere";
         }
 
-
-        private void Awake()
-        {
-            Camera.main.transform.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
-        }
-
         public void UpdateEffect()
         {
             if (atmosphereShader == null || settings == null)
@@ -69,7 +63,17 @@ namespace Ru1t3rl.Planets
             previousASettings = settings;
         }
 
-        void OnDestroy()
+        public void UpdateSun(Vector3 sunDirection)
+        {
+            material.SetVector("dirToSun", sunDirection);
+        }
+
+        void OnEnable()
+        {
+            Camera.main.transform.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
+        }
+
+        void OnDisable()
         {
             Camera.main.transform.GetComponent<AtmosphereManager>()?.RemoveAtmosphere(this);
         }

@@ -1,9 +1,6 @@
 ﻿// https://www.alanzucconi.com/2015/07/08/screen-shaders-and-postprocessing-effects-in-unity3d/
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using Ru1t3rl.Planets;
+using Ru1t3rl.Planets.Atmos;
 
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class PostProcessingEffect : MonoBehaviour

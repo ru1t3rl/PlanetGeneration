@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ru1t3rl.Planets
+namespace Ru1t3rl.Planets.Atmos
 {
     [ExecuteAlways, ImageEffectAllowedInSceneView]
     public class AtmosphereManager : MonoBehaviour
@@ -11,13 +11,16 @@ namespace Ru1t3rl.Planets
         List<Atmosphere> atmospheres = new List<Atmosphere>();
         Dictionary<Atmosphere, PostProcessingEffect> effects = new Dictionary<Atmosphere, PostProcessingEffect>();
 
-        Vector3 GetSunDirection(Transform sun, Transform gobj) => (gobj.position - sun.position).normalized;
+        Vector3 GetSunDirection(Transform sun, Transform gobj) => (sun.position - gobj.position).normalized;
 
 
         public void AddAtmosphere(Atmosphere atmos)
         {
-            atmospheres.Add(atmos);
-            CreateNewEffect(atmos);
+            if (!atmospheres.Contains(atmos))
+            {
+                atmospheres.Add(atmos);
+                CreateNewEffect(atmos);
+            }
         }
 
         void CreateNewEffect(Atmosphere atmos)
@@ -35,6 +38,7 @@ namespace Ru1t3rl.Planets
                 if (effect == effects[atmos])
                 {
                     atmospheres[i].UpdateEffect();
+                    atmospheres[i].UpdateSun(GetSunDirection(sun, atmospheres[i].transform));
                     effect.atmos = atmospheres[i];
                     break;
                 }
