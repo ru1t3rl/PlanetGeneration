@@ -78,12 +78,15 @@ namespace Ru1t3rl.Planets.Atmos
 
         async Task Enable()
         {
-            await Task.Delay(100);
+            await Task.Delay(1);
             try
             {
                 Camera.main.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
             }
-            catch (System.NullReferenceException) { backupCam.GetComponent<AtmosphereManager>()?.AddAtmosphere(this); }
+            catch (System.NullReferenceException)
+            {
+                backupCam.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
+            }
         }
 
         async void OnDisable()
@@ -93,7 +96,7 @@ namespace Ru1t3rl.Planets.Atmos
 
         async Task Disable()
         {
-            await Task.Delay(100);
+            await Task.Delay(1);
             try
             {
                 Camera.main.GetComponent<AtmosphereManager>()?.RemoveAtmosphere(this);
