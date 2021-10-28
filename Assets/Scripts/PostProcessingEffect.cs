@@ -22,6 +22,7 @@ public class PostProcessingEffect : MonoBehaviour
         if (Camera.main != null)
             Camera.main.depthTextureMode = DepthTextureMode.DepthNormals | DepthTextureMode.Depth;
 
+        Graphics.Blit(source, destination);
         //apply our material to the ouput
         Graphics.Blit(source, destination, atmos.material);
     }

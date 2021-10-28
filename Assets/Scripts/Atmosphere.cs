@@ -12,21 +12,21 @@ namespace Ru1t3rl.Planets
         public AtmosphereSettings settings;
         AtmosphereSettings previousASettings;
 
-        Material _material;
+        Material _Material;
         public Material material
         {
             private set
             {
-                _material = value;
+                _Material = value;
             }
             get
             {
-                if (_material == null)
+                if (_Material == null)
                 {
                     InitMaterial();
                 }
 
-                return _material;
+                return _Material;
             }
         }
 
@@ -43,10 +43,10 @@ namespace Ru1t3rl.Planets
 
         void InitMaterial()
         {
-            _material = new Material(atmosphereShader ? atmosphereShader : Shader.Find("Custom/AtmospherePostFX"));
-            settings.SetProperties(ref _material, shapeSettings.radius);
-            _material.SetVector("planetCentre", transform.position);
-            _material.name = $"{gameObject.name}_Atmosphere";
+            _Material = new Material(atmosphereShader ? atmosphereShader : Shader.Find("Custom/AtmospherePostFX"));
+            settings.SetProperties(ref _Material, shapeSettings.radius);
+            _Material.SetVector("planetCentre", transform.position);
+            _Material.name = $"{gameObject.name}_Atmosphere";
         }
 
 
@@ -61,7 +61,7 @@ namespace Ru1t3rl.Planets
                 return;
 
             material.SetVector("planetCentre", transform.position);
-            settings.SetProperties(ref _material, shapeSettings.radius);
+            settings.SetProperties(ref _Material, shapeSettings.radius);
 
             if (Camera.main != null)
                 Camera.main.depthTextureMode = DepthTextureMode.DepthNormals | DepthTextureMode.Depth;

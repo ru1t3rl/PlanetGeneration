@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 263fe86430530a542baa1bfb371a0aef, type: 3}
-  m_Name: AtmosExo
+  m_Name: AtmosEarth
   m_EditorClassIdentifier: 
   inScatterPoints: 10
   opticalDepthPoints: 10
-  densityFallOff: 4.6
-  atmosphereScale: 0.8
-  waveLengths: {x: 500, y: 600, z: 700}
-  scatteringStrength: 2.6
+  densityFallOff: 4.33
+  atmosphereScale: 1
+  waveLengths: {x: 781.4, y: 589.5, z: 768.2}
+  scatteringStrength: 2.23

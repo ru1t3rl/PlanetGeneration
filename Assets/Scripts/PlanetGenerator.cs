@@ -37,6 +37,11 @@ namespace Ru1t3rl
 
         float min, max;
 
+        void Awake()
+        {
+            ApplyGradientTexture();
+        }
+
         public void GenerateMesh()
         {
             Vectori test = new Vectori(10, 20, 1);
@@ -144,22 +149,29 @@ namespace Ru1t3rl
         #region Shader Setup
         public void ApplyGradientTexture()
         {
-            meshRenderers.Select(x => x.sharedMaterial = material);
-            material.SetFloat("_Min", min);
-            material.SetFloat("_Max", max);
-            material.SetFloat("_BaseHeight", _shapeSettings.radius);
+            try
+            {
+                meshRenderers.Select(x => x.sharedMaterial = material);
+                material.SetFloat("_Min", min);
+                material.SetFloat("_Max", max);
+                material.SetFloat("_BaseHeight", _shapeSettings.radius);
 
-            material.SetTexture("_GradientAlbedo", albedoTexture != null
-                ? albedoTexture
-                : albedoGradient.ToTexture2D(stepCount, gradientMapSize));
+                material.SetTexture("_GradientAlbedo", albedoTexture != null
+                    ? albedoTexture
+                    : albedoGradient.ToTexture2D(stepCount, gradientMapSize));
 
-            material.SetTexture("_GradientSmoothness", smoothnessTexture != null
-                ? smoothnessTexture
-                : smoothnessGradient.ToTexture2D(stepCount, gradientMapSize));
+                material.SetTexture("_GradientSmoothness", smoothnessTexture != null
+                    ? smoothnessTexture
+                    : smoothnessGradient.ToTexture2D(stepCount, gradientMapSize));
 
-            material.SetTexture("_GradientMetallic", metallicTexture != null
-                ? metallicTexture
-                : metallicGradient.ToTexture2D(stepCount, gradientMapSize));
+                material.SetTexture("_GradientMetallic", metallicTexture != null
+                    ? metallicTexture
+                    : metallicGradient.ToTexture2D(stepCount, gradientMapSize));
+            }
+            catch (System.ArgumentNullException ex)
+            {
+                Debug.LogError($"<b>[Planet Generator - {gameObject.name}]</b> {ex.ParamName} was null\nStack Trace:{ex.StackTrace}");
+            }
         }
 
         public void SaveGradientTexture()
