@@ -7,7 +7,6 @@ public class PostProcessingEffect : MonoBehaviour
 {
     public System.Action<PostProcessingEffect> OnRender;
     public Atmosphere atmos;
-    public int id;
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {

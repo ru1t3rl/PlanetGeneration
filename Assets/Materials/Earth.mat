@@ -100,7 +100,7 @@ Material:
     - _GlossyReflections: 1
     - _GradientAlbedoStrength: 0
     - _HeightOffset: 3.09
-    - _Max: 0.4511003
+    - _Max: 0
     - _MaxDist: 1.67
     - _Metallic: 1
     - _Min: 0

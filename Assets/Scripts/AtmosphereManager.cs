@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Ru1t3rl.Planets.Atmos
 {
@@ -19,7 +20,21 @@ namespace Ru1t3rl.Planets.Atmos
             if (!atmospheres.Contains(atmos))
             {
                 atmospheres.Add(atmos);
-                CreateNewEffect(atmos);
+                bool hasEffect = false;
+
+                PostProcessingEffect[] pEffects = GetComponentsInChildren<PostProcessingEffect>();
+                for (int i = 0; i < pEffects.Length; i++)
+                {
+                    if (pEffects[i].atmos == atmos)
+                    {
+                        hasEffect = true;
+                        effects.Add(atmos, pEffects[i]);
+                        break;
+                    }
+                }
+
+                if (!hasEffect)
+                    CreateNewEffect(atmos);
             }
         }
 
@@ -57,7 +72,18 @@ namespace Ru1t3rl.Planets.Atmos
                 DestroyImmediate(effects[atmos]);
                 effects.Remove(atmos);
             }
-            catch (KeyNotFoundException) { }
+            catch (KeyNotFoundException)
+            {
+                PostProcessingEffect[] pEffects = GetComponentsInChildren<PostProcessingEffect>();
+                for (int i = 0; i < pEffects.Length; i++)
+                {
+                    if (pEffects[i].atmos == atmos)
+                    {
+                        DestroyImmediate(atmos);
+                        break;
+                    }
+                }
+            }
         }
 
         public void RemoveAtmosphereAt(int i)

@@ -2171,7 +2171,7 @@ GameObject:
   - component: {fileID: 292787913}
   m_Layer: 6
   m_Name: Sun
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2675,7 +2675,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   atmos: {fileID: 0}
-  id: 0
 --- !u!43 &345445196
 Mesh:
   m_ObjectHideFlags: 0
@@ -8143,7 +8142,7 @@ GameObject:
   - component: {fileID: 1351999716}
   m_Layer: 0
   m_Name: Earth
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8321,6 +8320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f52758d75224b478ed1cc0861295d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backupCam: {fileID: 1494526661}
   atmosphereShader: {fileID: 4800000, guid: 3802813603ed81f40a29ec23e89f7add, type: 3}
   settings: {fileID: 11400000, guid: 7c544174cea66694b901e3d64e4e891b, type: 2}
 --- !u!43 &1355171103
@@ -9075,7 +9075,7 @@ GameObject:
   - component: {fileID: 1451321246}
   m_Layer: 0
   m_Name: Exo
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9237,6 +9237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f52758d75224b478ed1cc0861295d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backupCam: {fileID: 1494526661}
   atmosphereShader: {fileID: 4800000, guid: 3802813603ed81f40a29ec23e89f7add, type: 3}
   settings: {fileID: 11400000, guid: 22c75f78f8dd54f4c8706f7a8bec4dea, type: 2}
 --- !u!1 &1452656144
@@ -9986,8 +9987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb51cb8aa91fe5346b3e3c101b315f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atmos: {fileID: 1351999716}
-  id: 0
+  atmos: {fileID: 1451321246}
 --- !u!114 &1494526668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10000,8 +10000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb51cb8aa91fe5346b3e3c101b315f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atmos: {fileID: 1451321246}
-  id: 0
+  atmos: {fileID: 1351999716}
 --- !u!43 &1529831600
 Mesh:
   m_ObjectHideFlags: 0

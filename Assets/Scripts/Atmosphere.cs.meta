@@ -3,8 +3,10 @@ guid: 69f52758d75224b478ed1cc0861295d7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
+  defaultReferences:
+  - atmosphereShader: {fileID: 4800000, guid: 3802813603ed81f40a29ec23e89f7add, type: 3}
+  - settings: {fileID: 11400000, guid: 70f076c211b2cdc499fcaa248e25570c, type: 2}
+  executionOrder: 100
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

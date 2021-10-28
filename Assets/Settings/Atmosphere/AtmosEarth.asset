@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inScatterPoints: 10
   opticalDepthPoints: 10
-  densityFallOff: 4.56
-  atmosphereScale: 2
-  waveLengths: {x: 781.4, y: 589.5, z: 768.2}
-  scatteringStrength: 1
+  densityFallOff: 3.89
+  atmosphereScale: 1
+  waveLengths: {x: 659, y: 418.5, z: 542.9}
+  scatteringStrength: 2.8

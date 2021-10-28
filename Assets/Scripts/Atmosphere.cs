@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace Ru1t3rl.Planets.Atmos
 {
@@ -8,6 +9,8 @@ namespace Ru1t3rl.Planets.Atmos
     [ExecuteInEditMode, ImageEffectAllowedInSceneView]
     public class Atmosphere : MonoBehaviour
     {
+        [SerializeField] GameObject backupCam;
+
         public Shader atmosphereShader;
         public AtmosphereSettings settings;
         AtmosphereSettings previousASettings;
@@ -68,14 +71,35 @@ namespace Ru1t3rl.Planets.Atmos
             material.SetVector("dirToSun", sunDirection);
         }
 
-        void OnEnable()
+        async void OnEnable()
         {
-            Camera.main.transform.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
+            await Enable();
         }
 
-        void OnDisable()
+        async Task Enable()
         {
-            Camera.main.transform.GetComponent<AtmosphereManager>()?.RemoveAtmosphere(this);
+            await Task.Delay(100);
+            try
+            {
+                Camera.main.GetComponent<AtmosphereManager>()?.AddAtmosphere(this);
+            }
+            catch (System.NullReferenceException) { backupCam.GetComponent<AtmosphereManager>()?.AddAtmosphere(this); }
         }
+
+        async void OnDisable()
+        {
+            await Disable();
+        }
+
+        async Task Disable()
+        {
+            await Task.Delay(100);
+            try
+            {
+                Camera.main.GetComponent<AtmosphereManager>()?.RemoveAtmosphere(this);
+            }
+            catch (System.NullReferenceException) { backupCam.gameObject.GetComponent<AtmosphereManager>()?.RemoveAtmosphere(this); }
+        }
+
     }
 }

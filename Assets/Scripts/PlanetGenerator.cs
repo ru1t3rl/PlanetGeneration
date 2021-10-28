@@ -198,7 +198,7 @@ namespace Ru1t3rl
         async Task<MeshRenderer[]> GatherMeshRenderers(Transform transform)
         {
             List<MeshRenderer> renderers = new List<MeshRenderer>();
-            Task<MeshRenderer[]>[] childTasks = new Task<MeshRenderer[]>[transform.childCount + 1];
+            Task<MeshRenderer[]>[] childTasks = new Task<MeshRenderer[]>[transform.childCount];
 
             for (int iTask = 0; iTask < childTasks.Length; iTask++)
             {
