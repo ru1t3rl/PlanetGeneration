@@ -9,6 +9,8 @@ namespace Ru1t3rl
 {
     public class PlanetGenerator : MonoBehaviour
     {
+        const int FACE_COUNT = 6;
+
         [Range(2, 256)]
         public int resolution = 10;
         [SerializeField] bool spherified = true;
@@ -54,8 +56,8 @@ namespace Ru1t3rl
 
             if (meshFilters == null || meshFilters.Length == 0)
             {
-                meshFilters = new MeshFilter[6];
-                meshRenderers = new MeshRenderer[6];
+                meshFilters = new MeshFilter[FACE_COUNT];
+                meshRenderers = new MeshRenderer[FACE_COUNT];
 
                 for (int i = transform.childCount; i-- > 0;)
                 {
@@ -65,7 +67,7 @@ namespace Ru1t3rl
 
             planetFaces = new PlanetFace[meshFilters.Length];
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < FACE_COUNT; i++)
             {
                 if (meshFilters[i] == null)
                 {
@@ -100,20 +102,23 @@ namespace Ru1t3rl
 
         public async void GenerateChunks()
         {
+            // Destroy Possible previous chunks
             for (int i = transform.childCount; i-- > 0;)
             {
                 DestroyImmediate(transform.GetChild(i).gameObject);
             }
 
-            meshFilters = new MeshFilter[chunkSize.x * chunkSize.y * 6];
+            meshFilters = new MeshFilter[chunkSize.x * chunkSize.y * FACE_COUNT];
             meshRenderers = new MeshRenderer[meshFilters.Length];
-            planetFaces = new PlanetFace[6];
+            planetFaces = new PlanetFace[FACE_COUNT];
 
-            for (int iFace = 0; iFace < 6; iFace++)
+            // Generate Faces
+            for (int iFace = 0; iFace < FACE_COUNT; iFace++)
             {
                 GameObject face = new GameObject($"Face_{iFace + 1}");
                 face.transform.parent = transform;
 
+                // Generate Chunks
                 planetFaces[iFace] = new PlanetFace();
                 Mesh[] chunks = await planetFaces[iFace].GenerateChunksAsync(
                     resolution,
@@ -125,6 +130,7 @@ namespace Ru1t3rl
                     iFace
                 );
 
+                // Instantiate chunks using the generated meshes
                 for (int iChunk = 0; iChunk < chunks.Length; iChunk++)
                 {
                     GameObject chunk = new GameObject($"{chunks[iChunk].name}");
