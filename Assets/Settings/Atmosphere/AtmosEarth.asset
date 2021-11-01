@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 263fe86430530a542baa1bfb371a0aef, type: 3}
   m_Name: AtmosEarth
   m_EditorClassIdentifier: 
-  inScatterPoints: 10
-  opticalDepthPoints: 10
-  densityFallOff: 3.89
-  atmosphereScale: 1
+  inScatterPoints: 7
+  opticalDepthPoints: 7
+  densityFallOff: 4
+  atmosphereScale: 0.7
   waveLengths: {x: 659, y: 418.5, z: 542.9}
-  scatteringStrength: 2.8
+  scatteringStrength: 0.06
+  useExposure: 0
+  exposure: 1

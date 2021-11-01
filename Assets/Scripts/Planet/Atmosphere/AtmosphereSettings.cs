@@ -13,6 +13,9 @@ namespace Ru1t3rl.Planets.Atmos
         public float atmosphereScale = 1;
         public Vector3 waveLengths = new Vector3(700, 530, 440);
         public float scatteringStrength = 1;
+        public bool useExposure = true;
+        public float exposure = 1f;
+
 
         public void SetProperties(ref Material material, float bodyRadius)
         {
@@ -27,6 +30,8 @@ namespace Ru1t3rl.Planets.Atmos
             material.SetFloat("atmosphereRadius", (1 + atmosphereScale) * bodyRadius);
             material.SetFloat("planetRadius", bodyRadius);
             material.SetFloat("densityFalloff", densityFallOff);
+            material.SetFloat("exposure", exposure);
+            material.SetInt("useExposure", useExposure ? 1 : 0);
         }
     }
 }

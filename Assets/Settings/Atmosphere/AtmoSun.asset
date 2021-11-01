@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 263fe86430530a542baa1bfb371a0aef, type: 3}
+  m_Name: AtmoSun
+  m_EditorClassIdentifier: 
+  inScatterPoints: 7
+  opticalDepthPoints: 7
+  densityFallOff: 9.24
+  atmosphereScale: 4.79
+  waveLengths: {x: 271.4, y: 760.5, z: 419.4}
+  scatteringStrength: 0.59
+  useExposure: 1
+  exposure: 3.64

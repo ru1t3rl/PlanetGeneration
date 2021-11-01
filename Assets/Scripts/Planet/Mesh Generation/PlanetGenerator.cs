@@ -113,7 +113,7 @@ namespace Ru1t3rl
             planetFaces = new PlanetFace[FACE_COUNT];
 
             // Generate Faces
-            for (int iFace = 0; iFace < FACE_COUNT; iFace++)
+            for (int iFace = 0, i = 0; iFace < FACE_COUNT; iFace++)
             {
                 GameObject face = new GameObject($"Face_{iFace + 1}");
                 face.transform.parent = transform;
@@ -131,16 +131,20 @@ namespace Ru1t3rl
                 );
 
                 // Instantiate chunks using the generated meshes
-                for (int iChunk = 0; iChunk < chunks.Length; iChunk++)
+                for (int iChunk = 0; iChunk < chunks.Length; iChunk++, i++)
                 {
                     GameObject chunk = new GameObject($"{chunks[iChunk].name}");
                     chunk.transform.SetParent(face.transform);
 
-                    meshFilters[iFace] = chunk.AddComponent<MeshFilter>();
-                    meshRenderers[iFace] = chunk.AddComponent<MeshRenderer>();
+                    meshFilters[i] = chunk.AddComponent<MeshFilter>();
+                    meshRenderers[i] = chunk.AddComponent<MeshRenderer>();
 
-                    meshFilters[iFace].mesh = chunks[iChunk];
-                    meshRenderers[iFace].sharedMaterial = material;
+                    MeshCollider collider = chunk.AddComponent<MeshCollider>();
+                    collider.sharedMesh = chunks[iChunk];
+                    collider.convex = true;
+
+                    meshFilters[i].mesh = chunks[iChunk];
+                    meshRenderers[i].sharedMaterial = material;
 
                     chunk.transform.localPosition = Vector3.zero;
                 }

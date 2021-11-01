@@ -10,6 +10,7 @@ Shader "Custom/AtmospherePostFX"
         numInScatteringPoints ("Scattering Points", float) = 2
         numOpticalDepthPoints ("Optical Depth Points", float) = 2
         densityFalloff ("Density Fall off", float) = 1
+        exposure ("Exposure", float) = 1
         
         scatteringCoefficients ("Scatter Coefficients", Vector) = (700, 530, 440, 0)
 
@@ -60,6 +61,8 @@ Shader "Custom/AtmospherePostFX"
             int numOpticalDepthPoints;
             float4 scatteringCoefficients;
             float densityFalloff;
+            float exposure;
+            int useExposure;
 
             float densityAtPoint(float3 densitySamplePoint) {
                 float heightAboveSurface = length(densitySamplePoint - planetCentre) - planetRadius;
@@ -131,7 +134,12 @@ Shader "Custom/AtmospherePostFX"
                     const float epsilon = 0.0001;
                     float3 pointInAtmosphere = rayOrigin + rayDir * (dstToAtmosphere + epsilon);
                     float3 light = calculateLight(pointInAtmosphere, rayDir, dstThroughAtmosphere - epsilon * 2, col);
-                    return float4(light, 0);
+                    
+                    if(useExposure == 1) {
+                        return 1 - exp(-exposure * float4(light, exposure));
+                        } else if(useExposure == 0) {
+                        return float4(light, 0);
+                    }
                 }
                 
                 return col;

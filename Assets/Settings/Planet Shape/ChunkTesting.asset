@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43468e46924b0c488f1cf1750a7a137, type: 3}
   m_Name: ChunkTesting
   m_EditorClassIdentifier: 
-  radius: 2
+  radius: 40
   noiseLayers:
   - name: Base Continents
     enabled: 1
@@ -33,9 +33,9 @@ MonoBehaviour:
       seed: 
       strength: 0.75
       numLayers: 8
-      baseRoughness: 1
-      roughness: 2
-      persistence: 0.8
+      baseRoughness: 2
+      roughness: 5
+      persistence: 0.75
       centre: {x: 0, y: 0, z: 0}
       minValue: 0.1
   - name: LowLands - Flatten
