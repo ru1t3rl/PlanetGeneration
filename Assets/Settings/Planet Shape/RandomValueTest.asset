@@ -38,6 +38,18 @@ MonoBehaviour:
       persistence: 0.7
       centre: {x: 0, y: 0, z: 0}
       minValue: 0
+  - name: Mountains - Detail 2
+    enabled: 1
+    blendMode: 0
+    settings:
+      seed: 
+      strength: 0.5
+      numLayers: 8
+      baseRoughness: 3
+      roughness: 6
+      persistence: 0.8
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 0
   - name: LowLands - Flatten
     enabled: 1
     blendMode: 0

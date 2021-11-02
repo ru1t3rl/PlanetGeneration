@@ -37861,8 +37861,8 @@ GameObject:
   - component: {fileID: 1494526666}
   - component: {fileID: 1494526670}
   - component: {fileID: 1494526669}
-  - component: {fileID: 1494526668}
   - component: {fileID: 1494526667}
+  - component: {fileID: 1494526668}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -38021,7 +38021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb51cb8aa91fe5346b3e3c101b315f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atmos: {fileID: 1451321246}
+  atmos: {fileID: 1351999716}
 --- !u!114 &1494526668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38034,7 +38034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb51cb8aa91fe5346b3e3c101b315f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atmos: {fileID: 1351999716}
+  atmos: {fileID: 1451321246}
 --- !u!114 &1494526669
 MonoBehaviour:
   m_ObjectHideFlags: 0
