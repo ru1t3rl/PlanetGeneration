@@ -19,7 +19,7 @@ namespace Ru1t3rl
             for (int i = 0; i < stepCount; i++)
             {
                 value = g.Evaluate(1f / stepCount * i);
-                texture.SetPixels(Mathf.FloorToInt(i * (size.x / stepCount)), 0, Mathf.FloorToInt(size.x / stepCount), size.y, new Color[size.x * size.y].Select(x => value).ToArray());
+                texture.SetPixels(Mathf.FloorToInt(i * (size.x / stepCount)), 0, Mathf.FloorToInt(size.x / stepCount), size.y, new Color[Mathf.FloorToInt(size.x / stepCount) * size.y].Select(x => value).ToArray());
             }
             texture.Apply();
             return texture;
@@ -36,7 +36,7 @@ namespace Ru1t3rl
             for (int i = 0; i < stepCount; i++)
             {
                 value = g.Evaluate(1f / stepCount * i);
-                texture.SetPixels(Mathf.FloorToInt(i * (size.x / stepCount)), 0, Mathf.FloorToInt(size.x / stepCount), size.y, new Color[size.x * size.y].Select(x => value).ToArray());
+                texture.SetPixels(Mathf.FloorToInt(i * (size.x / stepCount)), 0, Mathf.FloorToInt(size.x / stepCount), size.y, new Color[Mathf.FloorToInt(size.x / stepCount) * size.y].Select(x => value).ToArray());
             }
             texture.Apply();
         }

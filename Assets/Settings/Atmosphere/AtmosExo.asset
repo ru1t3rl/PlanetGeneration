@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: AtmosExo
   m_EditorClassIdentifier: 
   inScatterPoints: 10
-  opticalDepthPoints: 10
-  densityFallOff: 31.67
-  atmosphereScale: 0.6
+  opticalDepthPoints: 100
+  densityFallOff: 5
+  atmosphereScale: 0.19
   waveLengths: {x: 330.35, y: 342.2, z: 447.1}
-  scatteringStrength: 0.14
+  scatteringStrength: 0.5
   useExposure: 0
   exposure: 0.1

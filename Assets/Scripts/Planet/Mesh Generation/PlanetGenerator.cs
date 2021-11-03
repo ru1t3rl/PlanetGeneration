@@ -155,8 +155,8 @@ namespace Ru1t3rl
                 max = planetFaces[iFace].max > max ? planetFaces[iFace].max : max;
             }
 
-            material.SetFloat("_Min", min);
-            material.SetFloat("_Max", max);
+            material.SetFloat("_Min", 0);
+            material.SetFloat("_Max", 1);
 
             ApplyGradientTexture();
         }
@@ -171,8 +171,8 @@ namespace Ru1t3rl
 
                 meshRenderers.Select(x => x.sharedMaterial = material);
 
-                material.SetFloat("_Min", min);
-                material.SetFloat("_Max", max);
+                material.SetFloat("_Min", 0);
+                material.SetFloat("_Max", 1);
                 material.SetFloat("_BaseHeight", _shapeSettings.radius);
 
                 material.SetTexture("_GradientAlbedo", albedoTexture != null

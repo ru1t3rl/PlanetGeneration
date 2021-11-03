@@ -83,7 +83,7 @@ namespace Ru1t3rl.Player.Movement
 
                 if (controller)
                 {
-                    controller.Move(velocity);
+                    controller.Move(velocity * Time.deltaTime);
                 }
                 else
                 {

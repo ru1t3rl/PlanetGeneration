@@ -19,10 +19,10 @@ namespace Ru1t3rl.Planets.Atmos
 
         public void SetProperties(ref Material material, float bodyRadius)
         {
-            float scatterR = Mathf.Pow(400 / waveLengths.x, 4) * scatteringStrength;
-            float scatterG = Mathf.Pow(400 / waveLengths.y, 4) * scatteringStrength;
-            float scatterB = Mathf.Pow(400 / waveLengths.z, 4) * scatteringStrength;
-            Vector3 scatteringCoef = new Vector3(scatterR, scatterB, scatterG);
+            float scatterR = Mathf.Pow(400 / waveLengths.x, 4);
+            float scatterG = Mathf.Pow(400 / waveLengths.y, 4);
+            float scatterB = Mathf.Pow(400 / waveLengths.z, 4);
+            Vector3 scatteringCoef = new Vector3(scatterR, scatterB, scatterG) * scatteringStrength;
 
             material.SetVector("scatteringCoefficients", scatteringCoef);
             material.SetInt("numInScatteringPoints", inScatterPoints);
