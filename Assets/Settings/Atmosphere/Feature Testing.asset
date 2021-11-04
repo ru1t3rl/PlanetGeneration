@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Feature Testing
   m_EditorClassIdentifier: 
   inScatterPoints: 10
-  opticalDepthPoints: 100
-  densityFallOff: 5
-  atmosphereScale: 0.5
+  opticalDepthPoints: 6
+  densityFallOff: 15
+  atmosphereScale: 0.69
   waveLengths: {x: 1134.4, y: 553.9, z: 501.1}
-  scatteringStrength: 0.5
+  scatteringStrength: 1.5
   useExposure: 0
-  exposure: 0.1
+  exposure: 1

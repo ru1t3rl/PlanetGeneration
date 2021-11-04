@@ -17,6 +17,6 @@ MonoBehaviour:
   densityFallOff: 4.96
   atmosphereScale: 0.5
   waveLengths: {x: 718, y: 500, z: 600}
-  scatteringStrength: 1.04
+  scatteringStrength: 0.3
   useExposure: 0
   exposure: 1.9

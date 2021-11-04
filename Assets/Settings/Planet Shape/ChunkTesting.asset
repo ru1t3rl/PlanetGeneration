@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43468e46924b0c488f1cf1750a7a137, type: 3}
   m_Name: ChunkTesting
   m_EditorClassIdentifier: 
-  radius: 40
+  radius: 400
   noiseLayers:
   - name: Base Continents
     enabled: 1
     blendMode: 0
     settings:
+      type: 0
       seed: 
       strength: 0.6
       numLayers: 1
@@ -26,10 +27,12 @@ MonoBehaviour:
       persistence: 0.5
       centre: {x: 0, y: 0, z: 0}
       minValue: 0.1
+      weightMultiplier: 1
   - name: Mountains - Detail 1
     enabled: 1
     blendMode: 0
     settings:
+      type: 0
       seed: 
       strength: 0.75
       numLayers: 8
@@ -38,10 +41,12 @@ MonoBehaviour:
       persistence: 0.75
       centre: {x: 0, y: 0, z: 0}
       minValue: 0.1
+      weightMultiplier: 1
   - name: LowLands - Flatten
     enabled: 1
     blendMode: 0
     settings:
+      type: 0
       seed: default
       strength: 1
       numLayers: 1
@@ -50,10 +55,12 @@ MonoBehaviour:
       persistence: 0.5
       centre: {x: 0, y: 0, z: 0}
       minValue: 0
+      weightMultiplier: 1
   - name: Planet Shape
     enabled: 0
     blendMode: 1
     settings:
+      type: 0
       seed: default
       strength: 0.2
       numLayers: 1
@@ -62,3 +69,4 @@ MonoBehaviour:
       persistence: 0.15
       centre: {x: 0, y: 0, z: 0}
       minValue: 0
+      weightMultiplier: 1

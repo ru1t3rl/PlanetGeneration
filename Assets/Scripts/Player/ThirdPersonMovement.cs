@@ -79,7 +79,7 @@ namespace Ru1t3rl.Player.Movement
                 targetRotation = Quaternion.LookRotation(-Camera.main.transform.forward, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed.x * Time.deltaTime);
 
-                velocity /= drag;
+                velocity /= Input.GetKeyDown(KeyCode.LeftShift) ? (drag / 2f) : drag;
 
                 if (controller)
                 {

@@ -15,8 +15,8 @@ MonoBehaviour:
   inScatterPoints: 7
   opticalDepthPoints: 7
   densityFallOff: 9.24
-  atmosphereScale: 4.79
+  atmosphereScale: 3.26
   waveLengths: {x: 271.4, y: 760.5, z: 419.4}
-  scatteringStrength: 0.59
+  scatteringStrength: 2.35
   useExposure: 1
-  exposure: 3.64
+  exposure: 1.48
